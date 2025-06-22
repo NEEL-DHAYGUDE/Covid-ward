@@ -1,7 +1,3 @@
-Sure! Here's a more detailed `README.md` that includes descriptions of all key features and functions in your COVID-19 Patient Management System project:
-
----
-
 # COVID-19 Patient Management System
 
 A desktop application built with **Tkinter** and **MySQL** to manage COVID-19 patient data. The system provides functionalities for adding, updating, deleting, and tracking patients' health status in real time.
@@ -111,18 +107,3 @@ pip install mysql-connector-python
 python main.py
 ```
 
----
-
-## 📸 Screenshots (Optional)
-
-*Add screenshots here to show GUI screens like login, dashboard, stats, etc.*
-
----
-
-## 📌 License
-
-This project is licensed under the MIT License.
-
----
-
-Let me know if you want to include mock data, SQL schema files, or an ER diagram!
