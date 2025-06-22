@@ -1,0 +1,501 @@
+import tkinter as tk 
+import mysql.connector as mys
+from tkinter import *
+from tkinter import messagebox
+import turtle
+from tkinter import ttk
+
+def WELCOME():
+    import turtle
+    colors = ['red', 'purple', 'blue', 'green', 'orange', 'yellow']
+    t = turtle.Pen()
+    t.speed(0)
+    turtle.bgcolor('black')
+    for x in range(185):
+        t.pencolor(colors[x%6])
+        t.width(x/100 + 1)
+        t.forward(x)
+        t.left(59)
+    t.fd(50)
+    import turtle
+    turtle.color('WHITE')
+    style = ('Courier', 30, 'italic')
+    turtle.write('WELCOME TO CUREITY COVID \n\t WARD', font=style, align='center')
+    turtle.hideturtle()
+    t.hideturtle()
+    turtle.exitonclick()
+def first():
+    def login():
+        root.destroy()
+        loginscr()
+    def edit():
+        root.destroy()
+        editscreen()
+    root=Tk()
+    photo = PhotoImage(file = "C:/Users/user/OneDrive/Documents/Pictures/Screenshots/2021-08-19 (4).png")
+    root.iconphoto(False, photo)
+    root.geometry("600x600")
+    root.title("WELCOME")
+    root.configure(bg='orange')
+    C = Canvas(root, bg ="blue", height = 1000, width = 950)
+    WELCOME = tk.Label(root, text ="WELCOME", font=('freestyle script',28,'bold'))
+    WELCOME.pack()
+    login = tk.Button(root, text ="LOGIN",fg ='red',font=("Times New Roman Bold", 10),command=login)
+    login.pack()
+    edit = tk.Button(root, text ="EDIT",fg ='red',font=("Times New Roman Bold", 10),command=edit)
+    edit.place(x=0, y=900)
+def loginscr():
+    def login():
+        try:
+            myconn=mys.connect(host="localhost", user="root", passwd="adis", database="covid")
+            if myconn.is_connected():
+                print("connection succesfull")
+            mycur=myconn.cursor()
+            user=name.get()
+            pw=password.get()
+            query="select * from officers where Name='{}' and password='{}'".format(user, pw)
+            mycur.execute(query)
+            rs=mycur.fetchall()
+            count=mycur.rowcount
+            print()
+            for row in rs:
+                if row!=None:
+                    messagebox.showinfo("Login ", "Login Successful")
+                    root.destroy()
+                    homepage()
+                else:
+                    print("No such entry")
+                    messagebox.showinfo("Login ", "Login Denied")
+        except Exception as e:
+            print(e)
+    def clear():
+        name.delete(0,END)
+        password.delete(0,END)
+        name.focus()
+    def back():
+        root.destroy()
+        first()
+    root=Tk()
+    root.title("LOGIN TO CUREITY COVID WARD")
+    moto = PhotoImage(file = "C:/Users/user/OneDrive/Documents/Pictures/Screenshots/2021-08-19 (4).png")
+    root.iconphoto(False, moto)
+    l=Label(root, text= "Username=")
+    lpass=Label(root, text= "Password=")
+    name=Entry(root)
+    password=Entry(root,show="*")
+    photo = PhotoImage(file = "C:/Users/user/OneDrive/Documents/Pictures/Screenshots/2021-08-19 (4).png")
+    X = Label(root, image=photo)
+    X.pack()
+    l.pack()
+    name.pack()
+    lpass.pack()
+    password.pack()
+    log=Button(root, text="login",command=login)
+    log.pack()
+    clear=Button(root, text="clear", command=clear)
+    clear.pack()
+    back=Button(root, text="back", command=back)
+    back.pack()
+    root.mainloop()
+def editscreen():
+    def add():
+        try:
+            myconn=mys.connect(host="localhost", user="root", passwd="adis", database="covid")
+            mycur=myconn.cursor()
+            print(n.get)
+            name= n.get()
+            passw= p.get()
+            mycur.execute("insert into officers values ('{}','{}')".format(name, passw))
+            myconn.commit()
+            print("info given")
+            messagebox.showinfo("Info ", "Information added")
+        except Exception as e:
+            print(e)
+    def clear():
+        n.delete(0,END)
+        p.delete(0,END)
+        
+    def delete():
+        x=messagebox.askyesno("Alert","Are you sure you want to delete the record ")
+        name=n.get()
+        if x==True:
+            try:
+                myconn=mys.connect(host="localhost", user="root", passwd="adis", database="covid")
+                mycur=myconn.cursor()
+                name=n.get()
+                query="delete from officers where Name='{}'".format(name)
+                mycur.execute(query)
+                myconn.commit()
+                print("Deleted")
+                messagebox.showinfo("delete ", "DELETED")
+            except Exception as e:
+                print(e)
+            clear()
+    def back():
+        root.destroy()
+        first()
+    root = tk.Tk()
+    moto = PhotoImage(file = "C:/Users/user/OneDrive/Documents/Pictures/Screenshots/2021-08-19 (4).png")
+    root.iconphoto(False, moto)
+    root.geometry("700x700")
+    root.title("CUREITY COVID WARD Menu Page")
+    root.configure(bg='purple')
+    C = Canvas(root, bg ="blue", height = 1000, width = 950)
+    EDIT = tk.Label(root, text ="EDIT", font=('Segoe Script',28,'bold'))
+    EDIT.place(x = 220, y = 20)
+    name = tk.Label(root, text ="USERNAME",fg ='blue',font=("Times New Roman Bold", 10) )
+    name.place(x = 50, y = 100)
+    n= tk.Entry(root, width = 35,fg ='blue',font=("Times New Roman Bold", 10))
+    n.place(x = 150, y = 100, width = 100)
+    passw = tk.Label(root, text ="PASSWORD",fg ='blue',font=("Times New Roman Bold", 10))
+    passw.place(x = 50, y = 150)
+    p = tk.Entry(root, width = 35,fg ='blue',font=("Times New Roman Bold", 10))
+    p.place(x = 150, y = 150, width = 100)
+    add = tk.Button(root, text ="Add",fg ='red',font=("Times New Roman Bold", 10),command=add)
+    add.place(x = 100, y = 300, width = 60)
+    clears = tk.Button(root, text ="Clear", fg ='red',font=("Times New Roman Bold", 10),command=clear)
+    clears.place(x = 170, y = 300, width = 60)
+    dele = tk.Button(root, text ="Delete",fg ='red',font=("Times New Roman Bold", 10),command=delete)
+    dele.place(x = 240, y = 300, width = 60)
+    back = tk.Button(root, text ="Back",fg ='red',font=("Times New Roman Bold", 10),command=back)
+    back.place(x = 310, y = 200, width = 60)
+def homepage():
+    def edit():
+        root.destroy()
+        e()
+    def pat():
+        root.destroy()
+        p()
+    def rc():
+        root.destroy()
+        r()
+    root=Tk()
+    moto = PhotoImage(file = "C:/Users/user/OneDrive/Documents/Pictures/Screenshots/2021-08-19 (4).png")
+    root.iconphoto(False, moto)
+    root.configure(bg='orange')
+    root.geometry("700x700")
+    WARD = tk.Label(root, text ="CUREITY COVID WARD\n KEEPING YOU WELL ", font=('Bahnschrift Condensed',28,'bold'))
+    WARD.place(x = 220, y = 20)
+    mani=Button(root, text="EDIT",fg ='red',font=("Segoe Script", 10),command=edit)
+    mani.place(x=510,y=375 )
+    patie=Button(root, text="PATIENTS",fg ='red',font=("Segoe Script", 10),command=pat)
+    patie.place(x=150,y=375 )
+    rec=Button(root, text="RECORDS",fg ='red',font=("Segoe Script", 10),command=rc)
+    rec.place(x=330,y=375 )
+def r():
+    def back():
+        root.destroy()
+        homepage()
+    def xyz():
+        root.destroy()
+        dispc()
+    def zyx():
+        root.destroy()
+        dispd()
+    root = tk.Tk()
+    moto = PhotoImage(file = "C:/Users/user/OneDrive/Documents/Pictures/Screenshots/2021-08-19 (4).png")
+    root.iconphoto(False, moto)
+    root.geometry("1000x1000")
+    root.title("PATIENT History")
+    root.configure(bg='purple')
+    C = Canvas(root, bg ="blue", height = 1000, width = 950)
+    EDIT = tk.Label(root, text ="RECORD", font=('Segoe Script',28,'bold'))
+    EDIT.pack()
+    mydb = mys.connect(host="localhost",user="root",password="adis",database="covid")
+    mycursor = mydb.cursor()
+    mycursor.execute("SELECT * FROM cured")
+    myresult = mycursor.fetchall()
+    count=0
+    for x in myresult:
+        count+=1
+    mydb = mys.connect(host="localhost",user="root",password="adis",database="covid")
+    mycursor = mydb.cursor()
+    mycursor.execute("SELECT * FROM death")
+    myresult = mycursor.fetchall()
+    de=0
+    for x in myresult:
+        de+=1
+    cures = tk.Label(root, text ="CURED=",fg ='blue',font=("Times New Roman Bold", 10) )
+    cures.pack()
+    ca = tk.Label(root, text =str(count),fg ='blue',font=("Times New Roman Bold", 10) )
+    ca.pack()
+    deat = tk.Label(root, text ="DEATHS=",fg ='blue',font=("Times New Roman Bold", 10) )
+    deat.pack()
+    da = tk.Label(root, text =str(de),fg ='blue',font=("Times New Roman Bold", 10) )
+    da.pack()
+    cur = tk.Button(root, text ="View cured",fg ='red',font=("Times New Roman Bold", 10),command=xyz)
+    cur.pack()
+    dea = tk.Button(root, text ="view dead",fg ='red',font=("Times New Roman Bold", 10),command=zyx)
+    dea.pack()
+    back = tk.Button(root, text ="Back",fg ='red',font=("Times New Roman Bold", 10),command=back)
+    back.pack()
+    
+def dispc():
+    def back():
+        root.destroy()
+        homepage()
+    root = tk.Tk()
+    moto = PhotoImage(file = "C:/Users/user/OneDrive/Documents/Pictures/Screenshots/2021-08-19 (4).png")
+    root.iconphoto(False, moto)
+    root.geometry("1000x1000")
+    root.title("CURED NAME PAGE")
+    root.configure(bg='purple')
+    C = Canvas(root, bg ="blue", height = 1000, width = 950)
+    EDIT = tk.Label(root, text ="CUREITY", font=('Segoe Script',28,'bold'))
+    EDIT.pack()
+    mydb = mys.connect(host="localhost",user="root",password="adis",database="covid")
+    mycursor = mydb.cursor()
+    mycursor.execute("SELECT * FROM cured")
+    myresult = mycursor.fetchall()
+    pat = tk.Label(root, text = "regno \t name ",fg ='blue',font=("Times New Roman Bold", 10))
+    pat.place(x=0, y=100)
+    count=6
+    for x in myresult:
+        pat = tk.Label(root, text = str(x[0])+"\t"+str(x[1]),fg ='blue',font=("Times New Roman Bold", 10))
+        pat.place(x=0, y=count*20)
+        count+=1
+    back = tk.Button(root, text ="Back",fg ='red',font=("Times New Roman Bold", 10),command=back)
+    back.pack()
+def dispd():
+    def back():
+        root.destroy()
+        homepage()
+    root = tk.Tk()
+    moto = PhotoImage(file = "C:/Users/user/OneDrive/Documents/Pictures/Screenshots/2021-08-19 (4).png")
+    root.iconphoto(False, moto)
+    root.geometry("1000x1000")
+    root.title("DEATH NAME PAGE")
+    root.configure(bg='purple')
+    C = Canvas(root, bg ="blue", height = 1000, width = 950)
+    EDIT = tk.Label(root, text ="RIP", font=('Segoe Script',28,'bold'))
+    EDIT.pack()
+    mydb = mys.connect(host="localhost",user="root",password="adis",database="covid")
+    mycursor = mydb.cursor()
+    mycursor.execute("SELECT * FROM death")
+    myresult = mycursor.fetchall()
+    pat = tk.Label(root, text = "regno \t name ",fg ='blue',font=("Times New Roman Bold", 10))
+    pat.place(x=0, y=100)
+    count=6
+    for x in myresult:
+        pat = tk.Label(root, text = str(x[0])+"\t"+str(x[1]),fg ='blue',font=("Times New Roman Bold", 10))
+        pat.place(x=0, y=count*20)
+        count+=1
+    back = tk.Button(root, text ="Back",fg ='red',font=("Times New Roman Bold", 10),command=back)
+    back.pack()
+    
+def e():
+    def add():
+        try:
+            myconn=mys.connect(host="localhost", user="root", passwd="adis", database="covid")
+            mycur=myconn.cursor()
+            print(n.get)
+            regno= num.get()
+            ne= n.get()
+            gender= g.get()
+            age= a.get()
+            doj= d.get()
+            infec= i.get()
+            fees= f.get()
+            phot=pi.get()
+            war=w.get()
+            mycur.execute("insert into patient values ({},'{}','{}',{},'{}',{},'{}','{}',{})".format(regno, ne, gender, age, doj, infec, fees, phot, war))
+            myconn.commit()
+            messagebox.showinfo("Add", "Insert Successful")
+            print("info given")
+        except Exception as e:
+            print(e)
+    def clear():
+        num.delete(0,END)
+        pi.delete(0,END)
+        n.delete(0,END)
+        g.delete(0,END)
+        a.delete(0,END)
+        d.delete(0,END)
+        i.delete(0,END)
+        f.delete(0,END)
+        w.delete(0,END)
+    def Search():
+        try:
+            myconn=mys.connect(host='localhost',user="root",\
+                               passwd="adis",database="covid")
+            if myconn.is_connected():
+                print("connection succssful")
+            mycur=myconn.cursor()
+            rno=num.get()
+            query="select * from patient where regno={}".format(rno)
+            mycur.execute(query)
+            rs=mycur.fetchone()
+            rs=list(rs)
+            regno= rs[0]
+            ne= rs[1]
+            gender= rs[2]
+            age= rs[3]
+            doj= rs[4]
+            infec= rs[5]
+            fees= rs[6]
+            phot=rs[7]
+            wardd=rs[8]
+            if rs==None:
+                messagebox.showinfo("PATIENT INFO","NO SUCH PATIENT")
+            else:
+                messagebox.showinfo("PATIENT INFO"," PATIENT FOUND ")
+                num.insert(END,regno)
+                pi.insert(END,phot)
+                n.insert(END,ne)
+                g.insert(END,gender)
+                a.insert(END,age)
+                d.insert(END,doj)
+                i.insert(END,infec)
+                f.insert(END, fees)
+                w.insert(END,wardd)
+        except Exception as e:
+            print(e)
+    
+    def delete():
+        x=messagebox.askyesno("Alert","Are you sure you want to delete the record ")
+        if x==True:
+            y=messagebox.askyesno("Alert","Cured? ")
+            if y== True:
+                try:
+                    myconn=mys.connect(host="localhost", user="root", passwd="adis", database="covid")
+                    mycur=myconn.cursor()
+                    print(n.get)
+                    regno= num.get()
+                    ne= n.get()
+                    mycur.execute("insert into cured values ({},'{}')".format(regno, ne))
+                    myconn.commit()
+                    print("info given")
+                except Exception as e:
+                    print(e)
+            else:
+                try:
+                    myconn=mys.connect(host="localhost", user="root", passwd="adis", database="covid")
+                    mycur=myconn.cursor()
+                    print(n.get)
+                    regno= num.get()
+                    ne= n.get()
+                    mycur.execute("insert into death values ({},'{}')".format(regno, ne))
+                    myconn.commit()
+                    print("info given")
+                except Exception as e:
+                    print(e)
+            try:
+                myconn=mys.connect(host="localhost", user="root", passwd="adis", database="covid")
+                mycur=myconn.cursor()
+                regn=num.get()
+                query="delete from patient where regno='{}'".format(regn)
+                mycur.execute(query)
+                myconn.commit()
+                print("Deleted")
+                messagebox.showinfo("delete", "DELETED")
+            except Exception as e:
+                print(e)
+            clear()
+    def upd():
+        regno= num.get()
+        ne= n.get()
+        gender= g.get()
+        age= a.get()
+        doj= d.get()
+        infec= i.get()
+        fees= f.get()
+        phot=pi.get()
+        wardd=w.get()
+        myconn=mys.connect(host='localhost',user="root",\
+                           passwd="adis",database="covid")
+        if myconn.is_connected():
+            print("connection successful")
+        mycur=myconn.cursor()
+        query="update patient set name='{}', gender='{}', age={}, join_date='{}', infection={}, fees='{}', photo='{}', ward={} where regno={}".format(ne,gender,age,doj,infec,fees,phot,wardd, regno)
+        mycur.execute(query)
+        myconn.commit()
+        messagebox.showinfo("Patient INFO"," Patient RECORD UPDATED SUCCESSFULLY... ")
+    def back():
+        root.destroy()
+        homepage()
+    root = tk.Tk()
+    moto = PhotoImage(file = "C:/Users/user/OneDrive/Documents/Pictures/Screenshots/2021-08-19 (4).png")
+    root.iconphoto(False, moto)
+    root.geometry("1000x1000")
+    root.title("PATIENT MANIPULATION")
+    root.configure(bg='purple')
+    C = Canvas(root, bg ="blue", height = 1000, width = 950)
+    EDIT = tk.Label(root, text ="EDIT", font=('Segoe Script',28,'bold'))
+    EDIT.pack()
+    regno = tk.Label(root, text ="Number",fg ='blue',font=("Times New Roman Bold", 10) )
+    regno.pack()
+    num= tk.Entry(root, width = 35,fg ='blue',font=("Times New Roman Bold", 10))
+    num.pack()
+    ward = tk.Label(root, text ="Ward.no.",fg ='blue',font=("Times New Roman Bold", 10) )
+    ward.pack()
+    w= tk.Entry(root, width = 35,fg ='blue',font=("Times New Roman Bold", 10))
+    w.pack()
+    pic = tk.Label(root, text ="PICTURE",fg ='blue',font=("Times New Roman Bold", 10) )
+    pic.pack()
+    pi= tk.Entry(root, width = 35,fg ='blue',font=("Times New Roman Bold", 10))
+    pi.pack()
+    name = tk.Label(root, text ="Name",fg ='blue',font=("Times New Roman Bold", 10))
+    name.pack()
+    n = tk.Entry(root, width = 35,fg ='blue',font=("Times New Roman Bold", 10))
+    n.pack()
+    gend = tk.Label(root, text ="GENDER",fg ='blue',font=("Times New Roman Bold", 10))
+    gend.pack()
+    g = tk.Entry(root, width = 35,fg ='blue',font=("Times New Roman Bold", 10))
+    g.pack()
+    age = tk.Label(root, text ="AGE",fg ='blue',font=("Times New Roman Bold", 10))
+    age.pack()
+    a = tk.Entry(root, width = 35,fg ='blue',font=("Times New Roman Bold", 10))
+    a.pack()
+    doj = tk.Label(root, text ="DATE JOIN",fg ='blue',font=("Times New Roman Bold", 10))
+    doj.pack()
+    d = tk.Entry(root, width = 35,fg ='blue',font=("Times New Roman Bold", 10))
+    d.pack()
+    inf = tk.Label(root, text ="INFECTION",fg ='blue',font=("Times New Roman Bold", 10))
+    inf.pack()
+    i = tk.Entry(root, width = 35,fg ='blue',font=("Times New Roman Bold", 10))
+    i.pack()
+    fee = tk.Label(root, text ="PAID?",fg ='blue',font=("Times New Roman Bold", 10))
+    fee.pack()
+    f = tk.Entry(root, width = 35,fg ='blue',font=("Times New Roman Bold", 10))
+    f.pack()
+    ins = tk.Button(root, text ="Add", fg ='red',font=("Times New Roman Bold", 10),command=add)
+    ins.pack()
+    ad= tk.Button(root, text ="Clear", fg ='red',font=("Times New Roman Bold", 10),command=clear)
+    ad.pack()
+    up= tk.Button(root, text ="UPDATE", fg ='red',font=("Times New Roman Bold", 10),command=upd)
+    up.pack()
+    dele = tk.Button(root, text ="Delete",fg ='red',font=("Times New Roman Bold", 10),command=delete)
+    dele.pack()
+    back = tk.Button(root, text ="Back",fg ='red',font=("Times New Roman Bold", 10),command=back)
+    back.pack()
+    sch = tk.Button(root, text ="SEARCH",fg ='red',font=("Times New Roman Bold", 10),command=Search)
+    sch.pack()
+def p():
+    def back():
+        root.destroy()
+        homepage()
+    root = tk.Tk()
+    moto = PhotoImage(file = "C:/Users/user/OneDrive/Documents/Pictures/Screenshots/2021-08-19 (4).png")
+    root.iconphoto(False, moto)
+    root.geometry("1000x1000")
+    root.title("PATIENT NAME PAGE")
+    root.configure(bg='purple')
+    C = Canvas(root, bg ="blue", height = 1000, width = 950)
+    EDIT = tk.Label(root, text ="PATIENTS", font=('Segoe Script',28,'bold'))
+    EDIT.pack()
+    mydb = mys.connect(host="localhost",user="root",password="adis",database="covid")
+    mycursor = mydb.cursor()
+    mycursor.execute("SELECT * FROM patient")
+    myresult = mycursor.fetchall()
+    pat = tk.Label(root, text = "regno \t name \t age \t ward \t male \t infect \t doj",fg ='blue',font=("Times New Roman Bold", 10))
+    pat.place(x=0, y=100)
+    count=6
+    for x in myresult:
+        pat = tk.Label(root, text = str(x[0])+"\t"+str(x[1])+"\t"+str(x[3])+"\t"+str(x[8])+"\t"+str(x[2])+"\t"+str((str(x[5])+"%"))+"\t"+str(x[4]),fg ='blue',font=("Times New Roman Bold", 10))
+        pat.place(x=0, y=count*20)
+        count+=1
+    back = tk.Button(root, text ="Back",fg ='red',font=("Times New Roman Bold", 10),command=back)
+    back.pack()
+WELCOME()
+first()
+
